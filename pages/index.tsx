@@ -2,11 +2,11 @@ import Head from "next/head";
 import Image from "next/image";
 import {Inter} from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import {getSession, useSession} from "next-auth/react";
+import {getSession} from "next-auth/react";
 import {GetServerSideProps} from "next";
 import {Session} from "next-auth";
 import {AlgoliaIndexRules} from "@/pages/api/types/algolia";
-import algoliasearch, {SearchClient} from "algoliasearch";
+import algoliasearch from "algoliasearch";
 import getRulesForIndex from "@/pages/api/algolia/getRulesForIndex";
 import {GetApiKeyResponse, Index} from "@algolia/client-search";
 
