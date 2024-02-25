@@ -9,6 +9,7 @@ import {AlgoliaIndexRules} from "@/pages/api/types/algolia";
 import algoliasearch from "algoliasearch";
 import getRulesForIndex from "@/pages/api/algolia/getRulesForIndex";
 import {GetApiKeyResponse, Index} from "@algolia/client-search";
+import IndicesForm from "@/pages/api/components/IndicesForm";
 
 const inter = Inter({subsets: ["latin"]});
 
@@ -29,7 +30,8 @@ const Home = (props: HomeProps) => {
         session,
         apiKeys,
         indices,
-        indexRules} = props;
+        indexRules
+    } = props;
 
     return (
         <>
@@ -55,44 +57,50 @@ const Home = (props: HomeProps) => {
                         />
                     )}
                     <div>
-                        {apiKeys?.keys?.map((key, index) => (
+                        {apiKeys?.items?.map((key, index) => (
                             <div key={index}>
                                 <h2 className={`${inter.className}`}>
                                     API Key: {key.value}
                                 </h2>
                                 <pre>{key.description}</pre>
+                                <br/>
                             </div>
                         ))}
                     </div>
-                    <div>
-                        {
-                            indices?.items?.map((algIndex, index) => (
-                                <div key={index}>
-                                    <h2 className={`${inter.className}`}>
-                                        Index: {algIndex.name}
-                                    </h2>
-                                </div>
-                            ))
-                        }
+                    <div className={`${styles.card} ${inter.className}`}/>
+                    <div className={`${styles.card} ${inter.className}`}>
+                        <h4>List Indices</h4>
+                        <IndicesForm/>
                     </div>
-                    <div>
-                        {
-                            indexRules?.map((rule, index) => (
-                                <div key={index}>
-                                    <h2 className={`${inter.className}`}>
-                                        Rule for: {rule.indexName}
-                                    </h2>
-                                    {
-                                        rule.rules.map((rule, index) => (
-                                            <div key={index}>
-                                                <pre>{JSON.stringify(rule, null, 2)}</pre>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            ))
-                        }
-                    </div>
+                    {/*<div>*/}
+                    {/*    {*/}
+                    {/*        indices?.items?.map((algIndex, index) => (*/}
+                    {/*            <div key={index}>*/}
+                    {/*                <h2 className={`${inter.className}`}>*/}
+                    {/*                    Index: {algIndex.name}*/}
+                    {/*                </h2>*/}
+                    {/*            </div>*/}
+                    {/*        ))*/}
+                    {/*    }*/}
+                    {/*</div>*/}
+                    {/*<div>*/}
+                    {/*    {*/}
+                    {/*        indexRules?.map((rule, index) => (*/}
+                    {/*            <div key={index}>*/}
+                    {/*                <h2 className={`${inter.className}`}>*/}
+                    {/*                    Rule for: {rule.indexName}*/}
+                    {/*                </h2>*/}
+                    {/*                {*/}
+                    {/*                    rule.rules.map((rule, index) => (*/}
+                    {/*                        <div key={index}>*/}
+                    {/*                            <pre>{JSON.stringify(rule, null, 2)}</pre>*/}
+                    {/*                        </div>*/}
+                    {/*                    ))*/}
+                    {/*                }*/}
+                    {/*            </div>*/}
+                    {/*        ))*/}
+                    {/*    }*/}
+                    {/*</div>*/}
                 </div>
             </main>
         </>
@@ -116,7 +124,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const client = algoliasearch(APP_ID, ADMIN_KEY);
 
     const apiKeysPromise = client.listApiKeys();
-    const indicesPromise =  client.listIndices();
+    const indicesPromise = client.listIndices();
 
     // Await all at once for efficiency
     const [apiKeys, indices] = await Promise.all([apiKeysPromise, indicesPromise]);

@@ -128,6 +128,17 @@ a {
   background-color: #eaeaea;
 }
 
+.input {
+  padding: 10px;
+  margin: 5px;
+  width: 250px;
+}
+
+.button {
+  padding: 10px;
+  margin: 5px;
+}
+
 
 @media (prefers-color-scheme: dark) {
   html {
