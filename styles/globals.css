@@ -100,8 +100,39 @@ a {
   text-decoration: none;
 }
 
+/* styles/global.css */
+.navBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #1e2f42;
+  color: white;
+  padding: 10px 20px;
+}
+
+.navBar p {
+  margin: 0;
+  font-size: 16px;
+}
+
+.navBar button {
+  padding: 8px 16px;
+  background-color: white;
+  color: #2686f5;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.navBar button:hover {
+  background-color: #eaeaea;
+}
+
+
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 }
+
+

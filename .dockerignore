@@ -1,0 +1,44 @@
+# Node.js common patterns
+node_modules
+npm-debug.log
+yarn-error.log
+.yarn
+.yarn-cache
+
+# Git and version control
+.git
+.gitignore
+.svn
+.cvsignore
+
+# Logs
+*.log
+
+# Editor directories and files
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Next.js & build output
+.next
+out
+build
+
+# Dependency directories
+node_modules
+jspm_packages
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional tsc cache
+.tsbuildinfo
