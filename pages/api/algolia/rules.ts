@@ -14,7 +14,7 @@ export default async function handler(
             const rulesResult = await rulesPromise;
             res.status(200).json(rulesResult);
         } catch (error) {
-            res.status(500).json({ message: 'Error fetching Algolia indices', error });
+            res.status(500).json({ message: 'Error fetching Algolia rules', error });
         }
     } else {
         res.setHeader('Allow', ['POST']);
