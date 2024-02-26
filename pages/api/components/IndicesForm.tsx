@@ -24,6 +24,7 @@ const IndicesForm: React.FC = () => {
     const [selectedSourceIndex, setSelectedSourceIndex] = useState<string>('');
     const [selectedDestinationIndex, setSelectedDestinationIndex] = useState<string>('');
     const [selectedRules, setSelectedRules] = useState<string[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     useEffect(() => {
         handleSubmit();
@@ -56,6 +57,8 @@ const IndicesForm: React.FC = () => {
         } else {
             setSelectedDestinationIndex(indexName);
         }
+        // Reset error message whenever a new index is selected
+        setErrorMessage('');
     };
 
     const handleRuleSelection = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -65,6 +68,23 @@ const IndicesForm: React.FC = () => {
 
     const copyRules = async () => {
         console.log(`Copying rules ${selectedRules} from ${selectedSourceIndex} to ${selectedDestinationIndex}`);
+        const destinationRulesResponse = await fetch('/api/algolia/rules', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ appId, apiKey, indexName: selectedDestinationIndex }),
+        });
+        const destinationRulesData = await destinationRulesResponse.json();
+        const destinationRuleIds = destinationRulesData.rules.map(rule => rule.objectID);
+
+        const isRuleExisting = selectedRules.some(ruleId => destinationRuleIds.includes(ruleId));
+
+        if (isRuleExisting) {
+            // If any selected rule exists in the destination, set an error message and prevent copying
+            setErrorMessage('One or more selected rules already exist in the destination index. Copy aborted.');
+            return;
+        }
         const response = await fetch('/api/algolia/copyRules', {
             method: 'POST',
             headers: {
@@ -118,9 +138,13 @@ const IndicesForm: React.FC = () => {
                             </option>
                         ))}
                     </select>
-                    <button className="button" onClick={copyRules} disabled={selectedRules.length === 0 || !selectedDestinationIndex}>
+                    <button className="button" onClick={copyRules}
+                            disabled={selectedRules.length === 0 || !selectedDestinationIndex || selectedSourceIndex === selectedDestinationIndex}>
                         Copy Selected Rules
                     </button>
+                    <div>
+                        {errorMessage && <h6 style={{ color: 'red' }}>{errorMessage}</h6>}
+                    </div>
                 </>
             )}
         </>
