@@ -130,7 +130,9 @@ const IndicesForm: React.FC = () => {
 
             {selectedSourceIndex && (
                 <>
-                    <h3>Rules</h3>
+                    <br/>
+                    <h4>Rules</h4>
+                    <br/>
                     <select multiple value={selectedRules} onChange={handleRuleSelection} style={{ width: '200px', height: '100px' }}>
                         {rulesResult?.[selectedSourceIndex]?.map(rule => (
                             <option key={rule.objectID} value={rule.objectID}>
@@ -138,6 +140,8 @@ const IndicesForm: React.FC = () => {
                             </option>
                         ))}
                     </select>
+                    <br/>
+                    <br/>
                     <button className="button" onClick={copyRules}
                             disabled={selectedRules.length === 0 || !selectedDestinationIndex || selectedSourceIndex === selectedDestinationIndex}>
                         Copy Selected Rules
