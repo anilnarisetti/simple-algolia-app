@@ -7,7 +7,7 @@ import {GetServerSideProps} from "next";
 import {Session} from "next-auth";
 import {AlgoliaIndexRules} from "@/pages/api/types/algolia";
 import algoliasearch from "algoliasearch";
-import getRulesForIndex from "@/pages/api/algolia/getRulesForIndex";
+import getRules from "@/pages/api/algolia/getRules";
 import {GetApiKeyResponse, Index} from "@algolia/client-search";
 import IndicesForm from "@/pages/api/components/IndicesForm";
 
@@ -130,7 +130,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const [apiKeys, indices] = await Promise.all([apiKeysPromise, indicesPromise]);
 
     //Fetch rules for each index
-    const rulesPromises = indices?.items.map(index => getRulesForIndex(index.name, client));
+    const rulesPromises = indices?.items.map(index => getRules(index.name, client));
     const indicesRules = await Promise.all(rulesPromises);
 
     return {

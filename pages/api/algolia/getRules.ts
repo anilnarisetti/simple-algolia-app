@@ -1,7 +1,7 @@
 import {SearchClient} from 'algoliasearch';
 import {AlgoliaIndexRules} from '@/pages/api/types/algolia';
 
-const getRulesForIndex = async (
+const getRules = async (
     indexName: string,
     client: SearchClient
 ): Promise<AlgoliaIndexRules> => {
@@ -17,4 +17,4 @@ const getRulesForIndex = async (
     };
 }
 
-export default getRulesForIndex;
+export default getRules;

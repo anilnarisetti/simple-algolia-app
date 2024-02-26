@@ -1,6 +1,6 @@
 import type {NextApiRequest, NextApiResponse} from "next";
 import algoliasearch from "algoliasearch";
-import getRulesForIndex from "@/pages/api/algolia/getRulesForIndex";
+import getRules from "@/pages/api/algolia/getRules";
 
 export default async function handler(
     req: NextApiRequest,
@@ -10,7 +10,7 @@ export default async function handler(
         const { appId, apiKey, indexName } = req.body;
         const client = algoliasearch(appId, apiKey);
         try {
-            const rulesPromise = getRulesForIndex(indexName, client);
+            const rulesPromise = getRules(indexName, client);
             const rulesResult = await rulesPromise;
             res.status(200).json(rulesResult);
         } catch (error) {

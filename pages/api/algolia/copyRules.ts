@@ -1,5 +1,4 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
-import algoliasearch from 'algoliasearch';
 import copyRule from "@/pages/api/algolia/copyRule";
 
 export default async function handler(
