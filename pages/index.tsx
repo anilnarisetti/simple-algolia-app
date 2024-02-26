@@ -5,33 +5,17 @@ import styles from "@/styles/Home.module.css";
 import {getSession} from "next-auth/react";
 import {GetServerSideProps} from "next";
 import {Session} from "next-auth";
-import {AlgoliaIndexRules} from "@/pages/api/types/algolia";
-import algoliasearch from "algoliasearch";
-import getRules from "@/pages/api/algolia/getRules";
-import {GetApiKeyResponse, Index} from "@algolia/client-search";
+
 import IndicesForm from "@/pages/api/components/IndicesForm";
 
 const inter = Inter({subsets: ["latin"]});
 
 type HomeProps = {
     session: Session | null;
-    apiKeys: {
-        keys: GetApiKeyResponse[];
-    },
-    indices: {
-        items: Index[];
-        nbPages: number;
-    };
-    indexRules: AlgoliaIndexRules[] | null;
 };
 
 const Home = (props: HomeProps) => {
-    const {
-        session,
-        apiKeys,
-        indices,
-        indexRules
-    } = props;
+    const {session} = props;
 
     return (
         <>
@@ -56,51 +40,12 @@ const Home = (props: HomeProps) => {
                             alt="User image"
                         />
                     )}
-                    <div>
-                        {apiKeys?.items?.map((key, index) => (
-                            <div key={index}>
-                                <h2 className={`${inter.className}`}>
-                                    API Key: {key.value}
-                                </h2>
-                                <pre>{key.description}</pre>
-                                <br/>
-                            </div>
-                        ))}
-                    </div>
                     <div className={`${styles.card} ${inter.className}`}/>
                     <div className={`${styles.card} ${inter.className}`}>
-                        <h4>List Indices</h4>
+                        <h4>Manage Indices</h4>
+                        <br/>
                         <IndicesForm/>
                     </div>
-                    {/*<div>*/}
-                    {/*    {*/}
-                    {/*        indices?.items?.map((algIndex, index) => (*/}
-                    {/*            <div key={index}>*/}
-                    {/*                <h2 className={`${inter.className}`}>*/}
-                    {/*                    Index: {algIndex.name}*/}
-                    {/*                </h2>*/}
-                    {/*            </div>*/}
-                    {/*        ))*/}
-                    {/*    }*/}
-                    {/*</div>*/}
-                    {/*<div>*/}
-                    {/*    {*/}
-                    {/*        indexRules?.map((rule, index) => (*/}
-                    {/*            <div key={index}>*/}
-                    {/*                <h2 className={`${inter.className}`}>*/}
-                    {/*                    Rule for: {rule.indexName}*/}
-                    {/*                </h2>*/}
-                    {/*                {*/}
-                    {/*                    rule.rules.map((rule, index) => (*/}
-                    {/*                        <div key={index}>*/}
-                    {/*                            <pre>{JSON.stringify(rule, null, 2)}</pre>*/}
-                    {/*                        </div>*/}
-                    {/*                    ))*/}
-                    {/*                }*/}
-                    {/*            </div>*/}
-                    {/*        ))*/}
-                    {/*    }*/}
-                    {/*</div>*/}
                 </div>
             </main>
         </>
@@ -119,31 +64,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
         };
     }
 
-    const APP_ID = process.env.ALGOLIA_APPLICATION_ID || "";
-    const ADMIN_KEY = process.env.ALGOLIA_ADMIN_API_KEY || "";
-    const client = algoliasearch(APP_ID, ADMIN_KEY);
-
-    const apiKeysPromise = client.listApiKeys();
-    const indicesPromise = client.listIndices();
-
-    // Await all at once for efficiency
-    const [apiKeys, indices] = await Promise.all([apiKeysPromise, indicesPromise]);
-
-    //Fetch rules for each index
-    const rulesPromises = indices?.items.map(index => getRules(index.name, client));
-    const indicesRules = await Promise.all(rulesPromises);
-
     return {
         props: {
             session,
-            apiKeys: {
-                items: apiKeys.keys || [],
-            },
-            indices: {
-                nbPages: indices.nbPages || 0,
-                items: indices.items || [],
-            },
-            indexRules: indicesRules, // Ensure this is correctly typed to be serializable
         },
     };
 };

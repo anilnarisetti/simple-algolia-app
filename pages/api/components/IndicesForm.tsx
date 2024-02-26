@@ -1,15 +1,11 @@
 import React, {useState, useEffect, ChangeEvent} from 'react';
 
-interface IndexItem {
-    name: string;
-}
-
 interface Rule {
     objectID: string;
 }
 
 interface IndicesResult {
-    items: IndexItem[];
+    items: string[];
 }
 
 interface RulesResult {
@@ -39,11 +35,20 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({appId, apiKey}),
+            body: JSON.stringify({ appId, apiKey }),
         });
         const data = await response.json();
-        setIndicesResult(data);
+
+        // Check if 'items' is present and has at least one item
+        if (!data.items || data.items.length === 0) {
+            setIndicesResult(null)
+            setErrorMessage('No indices found!');
+        } else {
+            setErrorMessage('');
+            setIndicesResult(data);
+        }
     };
+
 
     const onIndexSelected = async (indexName: string, isSource: boolean = true) => {
         const response = await fetch('/api/algolia/rules', {
@@ -114,32 +119,39 @@ const IndicesForm: React.FC = () => {
                 <button type="submit" className="button">Load Indices</button>
             </form>
 
-            <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
-                <div>
-                    <h4>Source Index</h4>
-                    <select onChange={(e) => onIndexSelected(e.target.value, true)} value={selectedSourceIndex}>
-                        <option value="" disabled>Select an index</option>
-                        {indicesResult?.items.map(index => (
-                            <option key={index.name} value={index.name}>{index.name}</option>
-                        ))}
-                    </select>
-                </div>
+            {errorMessage && <><br/><h6 style={{color:'red'}}>{errorMessage}</h6></>}
 
-                <div>
-                    <h4>Destination Index</h4>
-                    <select onChange={(e) => onIndexSelected(e.target.value, false)} value={selectedDestinationIndex}>
-                        <option value="" disabled>Select an index</option>
-                        {indicesResult?.items.map(index => (
-                            <option key={index.name} value={index.name}>{index.name}</option>
-                        ))}
-                    </select>
-                </div>
-            </div>
+            {
+                indicesResult && (
+                    <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
+                        <div>
+                            <h4>Source Index</h4>
+                            <select onChange={(e) => onIndexSelected(e.target.value, true)} value={selectedSourceIndex}>
+                                <option value="" disabled>Select an index</option>
+                                {indicesResult?.items?.map(index => (
+                                    <option key={index.name} value={index.name}>{index.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div>
+                            <h4>Destination Index</h4>
+                            <select onChange={(e) => onIndexSelected(e.target.value, false)}
+                                    value={selectedDestinationIndex}>
+                                <option value="" disabled>Select an index</option>
+                                {indicesResult?.items.map(index => (
+                                    <option key={index.name} value={index.name}>{index.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                )
+            }
 
             {selectedSourceIndex && (
                 <>
                     <br/>
-                    <h6>Rules ({`Page ${rulesResult?.page} / ${rulesResult?.nbPages}`})</h6>
+                    <h6>Rules</h6>
                     <br/>
                     <select multiple value={selectedRules} onChange={handleRuleSelection}
                             style={{width: '200px', height: '100px'}}>
@@ -155,9 +167,6 @@ const IndicesForm: React.FC = () => {
                             disabled={selectedRules.length === 0 || !selectedDestinationIndex || selectedSourceIndex === selectedDestinationIndex}>
                         Copy Selected Rules
                     </button>
-                    <div>
-                        {errorMessage && <h6 style={{color: 'red'}}>{errorMessage}</h6>}
-                    </div>
                 </>
             )}
         </>
