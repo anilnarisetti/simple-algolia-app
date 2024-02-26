@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
+import React, {useState, useEffect, ChangeEvent} from 'react';
 
 interface IndexItem {
     name: string;
@@ -14,6 +14,9 @@ interface IndicesResult {
 
 interface RulesResult {
     [indexName: string]: Rule[];
+
+    page: number;
+    nbPages: number;
 }
 
 const IndicesForm: React.FC = () => {
@@ -36,7 +39,7 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ appId, apiKey }),
+            body: JSON.stringify({appId, apiKey}),
         });
         const data = await response.json();
         setIndicesResult(data);
@@ -48,12 +51,12 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ appId, apiKey, indexName }),
+            body: JSON.stringify({appId, apiKey, indexName}),
         });
         const data = await response.json();
         if (isSource) {
             setSelectedSourceIndex(indexName);
-            setRulesResult({ ...rulesResult, [indexName]: data.rules });
+            setRulesResult({...rulesResult, [indexName]: data.rules, page: data.page, nbPages: data.numberOfPages});
         } else {
             setSelectedDestinationIndex(indexName);
         }
@@ -73,7 +76,7 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ appId, apiKey, indexName: selectedDestinationIndex }),
+            body: JSON.stringify({appId, apiKey, indexName: selectedDestinationIndex}),
         });
         const destinationRulesData = await destinationRulesResponse.json();
         const destinationRuleIds = destinationRulesData.rules.map(rule => rule.objectID);
@@ -90,7 +93,7 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ appId, apiKey, selectedSourceIndex, selectedDestinationIndex, selectedRules }),
+            body: JSON.stringify({appId, apiKey, selectedSourceIndex, selectedDestinationIndex, selectedRules}),
         });
         const data = await response.json();
         console.log(data);
@@ -98,17 +101,22 @@ const IndicesForm: React.FC = () => {
 
     return (
         <>
-            <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+            <form onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+            }}>
                 <label htmlFor="appId">App ID:</label>
-                <input type="text" id="appId" className="input" value={appId} onChange={(e) => setAppId(e.target.value)} required />
+                <input type="text" id="appId" className="input" value={appId} onChange={(e) => setAppId(e.target.value)}
+                       required/>
                 <label htmlFor="apiKey">API Key:</label>
-                <input type="text" id="apiKey" className="input" value={apiKey} onChange={(e) => setApiKey(e.target.value)} required />
+                <input type="text" id="apiKey" className="input" value={apiKey}
+                       onChange={(e) => setApiKey(e.target.value)} required/>
                 <button type="submit" className="button">Load Indices</button>
             </form>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
+            <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
                 <div>
-                    <h2>Source Index</h2>
+                    <h4>Source Index</h4>
                     <select onChange={(e) => onIndexSelected(e.target.value, true)} value={selectedSourceIndex}>
                         <option value="" disabled>Select an index</option>
                         {indicesResult?.items.map(index => (
@@ -118,7 +126,7 @@ const IndicesForm: React.FC = () => {
                 </div>
 
                 <div>
-                    <h2>Destination Index</h2>
+                    <h4>Destination Index</h4>
                     <select onChange={(e) => onIndexSelected(e.target.value, false)} value={selectedDestinationIndex}>
                         <option value="" disabled>Select an index</option>
                         {indicesResult?.items.map(index => (
@@ -131,9 +139,10 @@ const IndicesForm: React.FC = () => {
             {selectedSourceIndex && (
                 <>
                     <br/>
-                    <h4>Rules</h4>
+                    <h6>Rules ({`Page ${rulesResult?.page} / ${rulesResult?.nbPages}`})</h6>
                     <br/>
-                    <select multiple value={selectedRules} onChange={handleRuleSelection} style={{ width: '200px', height: '100px' }}>
+                    <select multiple value={selectedRules} onChange={handleRuleSelection}
+                            style={{width: '200px', height: '100px'}}>
                         {rulesResult?.[selectedSourceIndex]?.map(rule => (
                             <option key={rule.objectID} value={rule.objectID}>
                                 {rule.objectID}
@@ -147,7 +156,7 @@ const IndicesForm: React.FC = () => {
                         Copy Selected Rules
                     </button>
                     <div>
-                        {errorMessage && <h6 style={{ color: 'red' }}>{errorMessage}</h6>}
+                        {errorMessage && <h6 style={{color: 'red'}}>{errorMessage}</h6>}
                     </div>
                 </>
             )}
