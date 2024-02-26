@@ -16,9 +16,6 @@ interface IndicesResult {
 
 interface RulesResult {
     [indexName: string]: Rule[];
-
-    page: number;
-    nbPages: number;
 }
 
 const IndicesForm: React.FC = () => {
@@ -41,7 +38,7 @@ const IndicesForm: React.FC = () => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ appId, apiKey }),
+            body: JSON.stringify({appId, apiKey}),
         });
         const data = await response.json();
 
@@ -54,7 +51,6 @@ const IndicesForm: React.FC = () => {
             setIndicesResult(data);
         }
     };
-
 
     const onIndexSelected = async (indexName: string, isSource: boolean = true) => {
         const response = await fetch('/api/algolia/rules', {
@@ -90,7 +86,8 @@ const IndicesForm: React.FC = () => {
             body: JSON.stringify({appId, apiKey, indexName: selectedDestinationIndex}),
         });
         const destinationRulesData = await destinationRulesResponse.json();
-        const destinationRuleIds = destinationRulesData.rules.map(rule => rule.objectID);
+        const destinationRuleIds = destinationRulesData.rules.map((rule: Rule) => rule.objectID);
+
 
         const isRuleExisting = selectedRules.some(ruleId => destinationRuleIds.includes(ruleId));
 
@@ -125,7 +122,7 @@ const IndicesForm: React.FC = () => {
                 <button type="submit" className="button">Load Indices</button>
             </form>
 
-            {errorMessage && <ErrorMessage message={errorMessage} />}
+            {errorMessage && <ErrorMessage message={errorMessage}/>}
 
             {indicesResult && (
                 <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>

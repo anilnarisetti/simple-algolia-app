@@ -8,19 +8,23 @@ export default async function handler(
     if (req.method === 'POST') {
         const {appId, apiKey, selectedSourceIndex, selectedDestinationIndex, selectedRules} = req.body;
         try {
-           // Wait all copy rules promises to complete
-           await Promise.all(selectedRules.map(ruleId => copyRule({
+            // Explicitly declare the type of ruleId as string
+            await Promise.all(selectedRules.map((ruleId: string) => copyRule({
                 applicationID: appId,
                 adminAPIKey: apiKey,
                 sourceIndexName: selectedSourceIndex,
                 targetIndexName: selectedDestinationIndex,
                 ruleId: ruleId,
             })));
-           res.status(200).json({message: 'Rules copied successfully'});
-        } catch (error) {
+            res.status(200).json({message: 'Rules copied successfully'});
+        } catch (error: unknown) {
+            let errorMessage = 'An unexpected error occurred';
+            if (error instanceof Error) {
+                errorMessage = error.message || error.toString();
+            }
             res.status(500).json({
-                message: `Error copying rules from ${selectedDestinationIndex} to ${selectedDestinationIndex} with ${selectedRules}`,
-                error
+                message: `Error copying rules from ${selectedSourceIndex} to ${selectedDestinationIndex} with ${selectedRules}`,
+                error: errorMessage
             });
         }
     } else {

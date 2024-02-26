@@ -14,7 +14,6 @@ const getRules = async (
         rules: result?.hits || [],
         page: result?.page || 1,
         numberOfPages: result?.nbPages || 1,
-        nbHits: result?.nbHits || 1,
     };
 }
 
