@@ -28,12 +28,8 @@ const copyRule = async ({
         // Fetch the rule from the source index
         const rule = await sourceIndex.getRule(ruleId);
 
-        console.log(ruleId)
-
         // Save the rule to the target index
         const result = await targetIndex.saveRule(rule);
-
-        console.log(result)
 
         // Logging the task ID from the operation result
         console.log(`Rule ${ruleId} copied successfully from ${sourceIndexName} to ${targetIndexName}. TaskId: ${result.taskID}`);

@@ -12,8 +12,9 @@ const getRules = async (
     return {
         indexName: indexName,
         rules: result?.hits || [],
-        page: 0,
-        numberOfPages: 0,
+        page: result?.page || 1,
+        numberOfPages: result?.nbPages || 1,
+        nbHits: result?.nbHits || 1,
     };
 }
 
