@@ -1,11 +1,17 @@
 import React, {useState, useEffect, ChangeEvent} from 'react';
+import ErrorMessage from "@/pages/api/components/ErrorMessage";
+import IndexSelect from "@/pages/api/components/IndexSelect";
+
+interface IndexItem {
+    name: string;
+}
 
 interface Rule {
     objectID: string;
 }
 
 interface IndicesResult {
-    items: string[];
+    items: IndexItem[];
 }
 
 interface RulesResult {
@@ -119,34 +125,24 @@ const IndicesForm: React.FC = () => {
                 <button type="submit" className="button">Load Indices</button>
             </form>
 
-            {errorMessage && <><br/><h6 style={{color:'red'}}>{errorMessage}</h6></>}
+            {errorMessage && <ErrorMessage message={errorMessage} />}
 
-            {
-                indicesResult && (
-                    <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
-                        <div>
-                            <h4>Source Index</h4>
-                            <select onChange={(e) => onIndexSelected(e.target.value, true)} value={selectedSourceIndex}>
-                                <option value="" disabled>Select an index</option>
-                                {indicesResult?.items?.map(index => (
-                                    <option key={index.name} value={index.name}>{index.name}</option>
-                                ))}
-                            </select>
-                        </div>
-
-                        <div>
-                            <h4>Destination Index</h4>
-                            <select onChange={(e) => onIndexSelected(e.target.value, false)}
-                                    value={selectedDestinationIndex}>
-                                <option value="" disabled>Select an index</option>
-                                {indicesResult?.items.map(index => (
-                                    <option key={index.name} value={index.name}>{index.name}</option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-                )
-            }
+            {indicesResult && (
+                <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '20px'}}>
+                    <IndexSelect
+                        label="Source Index"
+                        indices={indicesResult.items.map(item => item.name)}
+                        selectedValue={selectedSourceIndex}
+                        onChange={(value) => onIndexSelected(value, true)}
+                    />
+                    <IndexSelect
+                        label="Destination Index"
+                        indices={indicesResult.items.map(item => item.name)}
+                        selectedValue={selectedDestinationIndex}
+                        onChange={(value) => onIndexSelected(value, false)}
+                    />
+                </div>
+            )}
 
             {selectedSourceIndex && (
                 <>
