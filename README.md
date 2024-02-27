@@ -6,8 +6,6 @@
 ### This is a Simple Algolio App using NextJS with typescript and Algolia search.
 ### Need to create an account with Algolia and setup an application with few rules.
 
-#### Please let me know if you have any questions or suggestions at anilmail@gmail.com
-
 #### The dot env file contains the configuration for the app.
 
 >GITHUB_ID=YOUR_GITHUB_ID
@@ -24,3 +22,6 @@ in the terminal:
 
 
 It is not recommended to expose API Keys on the website. Since, this is a POC I took the liberty to use a test api key to preload.
+
+
+Please let me know if you have any questions or suggestions at anilmail@gmail.com
