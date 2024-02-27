@@ -19,8 +19,8 @@ interface RulesResult {
 }
 
 const IndicesForm: React.FC = () => {
-    const [appId, setAppId] = useState<string>('JKUHMJ7653');
-    const [apiKey, setApiKey] = useState<string>('3543317151b2fa0ddf7d8783603ef149');
+    const [appId, setAppId] = useState<string>('');
+    const [apiKey, setApiKey] = useState<string>('');
     const [indicesResult, setIndicesResult] = useState<IndicesResult | null>(null);
     const [rulesResult, setRulesResult] = useState<RulesResult | null>(null);
     const [selectedSourceIndex, setSelectedSourceIndex] = useState<string>('');
