@@ -8,10 +8,15 @@
 
 #### The dot env file contains the configuration for the app.
 
+##### Git Hub settings
 > GITHUB_ID=YOUR_GITHUB_ID\
 > GITHUB_SECRET=YOUR_GITHUB_SECRET
+
+##### Algolia settings
 > ALGOLIA_ADMIN_API_KEY=YOUR_ALGOLIA_ADMIN_API_KEY\
 > ALGOLIA_APPLICATION_ID=YOUR_ALGOLIA_APPLICATION_ID
+
+##### Application settings
 > NEXT_AUTH_SECRET=YOUR_NEXT_AUTH_SECRET  
 > NEXT_AUTH_URL=http://localhost:3000
 
