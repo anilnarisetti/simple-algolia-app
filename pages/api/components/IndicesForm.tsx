@@ -51,6 +51,20 @@ const IndicesForm: React.FC = () => {
         handleSubmit();
     }, [handleSubmit]);
 
+    useEffect(() => {
+        // Fetch the config data from your API route
+        const fetchConfig = async () => {
+            const res = await fetch('/api/algolia/config');
+            const config = await res.json();
+            setAppId(config.appId || '');
+            setApiKey(config.apiKey || '');
+            // TODO: Since API Key shouldn't be fetched and stored in the frontend,
+            // TODO: handle it securely server-side
+        };
+        fetchConfig();
+    }, []); // Empty dependency array ensures this runs once on mount
+
+
     const onIndexSelected = async (indexName: string, isSource: boolean = true) => {
         const response = await fetch('/api/algolia/rules', {
             method: 'POST',
