@@ -3,10 +3,10 @@
 
 ## Description
 
-### This is a Simple Algolio App using NextJS with typescript and Algolia search.
-### Need to create an account with Algolia and setup an application with few rules.
+This is a Simple Algolio App using NextJS with typescript and Algolia search.
+You need to create an account with Algolia and setup an application with few rules.
 
-#### The dot env file contains the configuration for the app.
+#### The .env.local config file contains the following configuration.
 
 ##### Git Hub settings
 > GITHUB_ID=YOUR_GITHUB_ID\
